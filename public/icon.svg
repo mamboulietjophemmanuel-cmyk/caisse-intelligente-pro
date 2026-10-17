@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5D76E" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#997715" />
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917" />
+      <stop offset="100%" stop-color="#09090b" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+  <rect width="504" height="504" x="4" y="4" rx="124" fill="none" stroke="url(#goldGrad)" stroke-width="4" stroke-opacity="0.3" />
+
+  <!-- Crown Icon & Cash Register Symbol -->
+  <g transform="translate(106, 116)" filter="url(#glow)">
+    <!-- Crown -->
+    <path d="M40 90 L80 180 L150 70 L220 180 L260 90 L240 210 L60 210 Z" fill="url(#goldGrad)" />
+    <!-- Pearls / Gems on crown tips -->
+    <circle cx="40" cy="80" r="12" fill="#FDE68A" />
+    <circle cx="150" cy="60" r="14" fill="#FDE68A" />
+    <circle cx="260" cy="80" r="12" fill="#FDE68A" />
+    
+    <!-- Register Base & Screen -->
+    <rect x="30" y="225" width="240" height="40" rx="8" fill="#27272a" stroke="url(#goldGrad)" stroke-width="3" />
+    <text x="150" y="252" fill="#F5D76E" font-family="monospace" font-size="20" font-weight="bold" text-anchor="middle">FCFA 0.00</text>
+    
+    <!-- Cash Drawer Base -->
+    <rect x="10" y="275" width="280" height="25" rx="6" fill="url(#goldGrad)" />
+    <!-- Key slot -->
+    <circle cx="150" cy="287" r="4" fill="#18181b" />
+  </g>
+</svg>

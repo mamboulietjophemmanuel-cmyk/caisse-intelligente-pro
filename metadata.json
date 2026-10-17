@@ -1,0 +1,6 @@
+{
+  "name": "Caisse Intelligente Pro",
+  "description": "Système de caisse enregistreuse tactile mobile-first pour bar, restaurant et commerce. Mode sombre automatique, support hors-ligne avec synchronisation et encaissement rapide en FCFA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

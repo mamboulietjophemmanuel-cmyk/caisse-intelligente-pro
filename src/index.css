@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-ui: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-brand: 'Cinzel', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Base Accent (Dynamic - Gold default) */
+    --accent: #d97706;
+    --accent-light: #f59e0b;
+    --accent-dark: #b45309;
+    --accent-subtle: rgba(217, 119, 6, 0.12);
+    --accent-border: rgba(217, 119, 6, 0.35);
+    --accent-contrast: #ffffff;
+    --accent-ring: rgba(217, 119, 6, 0.35);
+
+    /* Safe area insets for notched phones & tablets */
+    --sat: env(safe-area-inset-top, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
+    --sar: env(safe-area-inset-right, 0px);
+  }
+
+  :root.dark {
+    --accent: #d4af37;
+    --accent-light: #f5d76e;
+    --accent-dark: #997715;
+    --accent-subtle: rgba(212, 175, 55, 0.15);
+    --accent-border: rgba(212, 175, 55, 0.4);
+    --accent-contrast: #09090b;
+    --accent-ring: rgba(212, 175, 55, 0.4);
+  }
+
+  * {
+    /* Eliminate 300ms tap delay and double-tap zoom delay on mobile */
+    touch-action: manipulation;
+  }
+
+  html {
+    /* Smooth momentum scrolling */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-ui);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  input, textarea {
+    user-select: auto;
+    -webkit-user-select: auto;
+  }
+
+  button, a, [role="button"] {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Accent Color Custom Utility Classes */
+.text-accent {
+  color: var(--accent) !important;
+}
+
+.bg-accent {
+  background-color: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+}
+
+.bg-accent-subtle {
+  background-color: var(--accent-subtle) !important;
+  color: var(--accent) !important;
+}
+
+.border-accent {
+  border-color: var(--accent) !important;
+}
+
+.border-accent-subtle {
+  border-color: var(--accent-border) !important;
+}
+
+.btn-accent {
+  background: linear-gradient(135deg, var(--accent-light), var(--accent)) !important;
+  color: var(--accent-contrast) !important;
+  box-shadow: 0 4px 14px var(--accent-subtle);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.btn-accent:hover {
+  filter: brightness(1.08);
+}
+
+.btn-accent:active {
+  transform: scale(0.97) translateZ(0) !important;
+}
+
+.badge-accent {
+  background-color: var(--accent-subtle) !important;
+  color: var(--accent) !important;
+  border: 1px solid var(--accent-border) !important;
+}
+
+/* Hardware Acceleration and Content-Visibility performance utilities */
+.gpu-accelerated {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.catalogue-container {
+  will-change: transform;
+  transform: translateZ(0);
+  content-visibility: auto;
+  contain-intrinsic-size: 0 800px;
+}
+
+.dashboard-container {
+  will-change: transform;
+  transform: translateZ(0);
+  content-visibility: auto;
+  contain-intrinsic-size: 0 650px;
+}
+
+.mobile-touch-card {
+  will-change: transform;
+  transform: translateZ(0);
+  content-visibility: auto;
+  contain-intrinsic-size: 0 160px;
+}
+
+.mobile-touch-card:active {
+  transform: scale(0.96) translateZ(0);
+  transition: transform 0.08s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.sale-row-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+  content-visibility: auto;
+  contain-intrinsic-size: 0 72px;
+}
+
+/* Custom Lightweight Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Thermal receipt printing styling */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-receipt, #printable-receipt * {
+    visibility: visible;
+  }
+  #printable-receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm;
+    margin: 0;
+    padding: 8mm;
+    color: black !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Mobile Safe Areas */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.pt-safe {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+
+/* Bottom Sheet Native Slide-Up Animation */
+@keyframes slideUpDrawer {
+  0% {
+    transform: translateY(100%);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-bottom-sheet {
+  animation: slideUpDrawer 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-overlay {
+  animation: fadeInOverlay 0.2s ease-out forwards;
+}
