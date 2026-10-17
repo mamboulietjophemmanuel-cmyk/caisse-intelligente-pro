@@ -20,7 +20,219 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
 
   const handlePrint = () => {
     soundEffects.tap(settings.hapticSound);
-    window.print();
+    if (!sale) return;
+
+    const receiptHtml = `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ticket ${sale.receiptNumber}</title>
+  <style>
+    @page {
+      size: 80mm auto;
+      margin: 0;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 8mm;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+      line-height: 1.4;
+    }
+    .receipt {
+      width: 100%;
+      max-width: 80mm;
+      background: #fff;
+      color: #000;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 1px dashed #000;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+    }
+    .header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      font-weight: 800;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .header p {
+      margin: 2px 0;
+      font-size: 10px;
+    }
+    .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      border-bottom: 1px dashed #000;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+      font-size: 10px;
+    }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .meta-label {
+      color: #666;
+    }
+    .items {
+      border-bottom: 1px dashed #000;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+    }
+    .items-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin: 3px 0;
+    }
+    .item-name {
+      flex: 1;
+    }
+    .item-qty {
+      text-align: right;
+      width: 50px;
+    }
+    .item-total {
+      text-align: right;
+      font-weight: bold;
+    }
+    .totals {
+      border-bottom: 1px dashed #000;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 12px;
+      margin: 4px 0;
+    }
+    .change-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin: 2px 0;
+    }
+    .barcode {
+      text-align: center;
+      font-size: 8px;
+      letter-spacing: 6px;
+      margin-top: 8px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .barcode-bars {
+      display: flex;
+      justify-content: center;
+      gap: 1px;
+      height: 24px;
+      margin-bottom: 2px;
+    }
+    .bar {
+      background: #000;
+    }
+    .footer {
+      text-align: center;
+      font-size: 10px;
+      font-style: italic;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body onload="window.print(); setTimeout(() => window.close(), 500);">
+  <div class="receipt">
+    <div class="header">
+      <h1>${settings.storeName}</h1>
+      <p>${settings.storeSubtitle}</p>
+      <p>${settings.storeAddress}</p>
+      <p>Tél : ${settings.storePhone}</p>
+    </div>
+
+    <div class="meta">
+      <div class="meta-row"><span class="meta-label">Ticket N° :</span><span>${sale.receiptNumber}</span></div>
+      <div class="meta-row"><span class="meta-label">Date :</span><span>${sale.dateFormatted} ${sale.timeFormatted}</span></div>
+      <div class="meta-row"><span class="meta-label">Caissier :</span><span>${sale.cashierName}</span></div>
+      <div class="meta-row"><span class="meta-label">Règlement :</span><span class="font-bold">${sale.paymentMethod}${sale.mobileMoneyProvider ? ` (${sale.mobileMoneyProvider})` : ''}</span></div>
+    </div>
+
+    <div class="items">
+      <div class="items-header">
+        <span>Article</span>
+        <span style="text-align:right;width:50px;">Qte × Prix</span>
+        <span style="text-align:right;">Total</span>
+      </div>
+      ${sale.items
+        .map(
+          (item) => `
+        <div class="item">
+          <span class="item-name">${item.productName}</span>
+          <span class="item-qty">${item.quantity} × ${item.unitPrice.toLocaleString('fr-FR')}</span>
+          <span class="item-total">${item.totalPrice.toLocaleString('fr-FR')}</span>
+        </div>
+      `
+        )
+        .join('')}
+    </div>
+
+    <div class="totals">
+      <div class="total-row">
+        <span>TOTAL :</span>
+        <span>${sale.total.toLocaleString('fr-FR')} ${settings.currency}</span>
+      </div>
+      ${sale.paymentMethod === 'CASH' ? `
+      <div class="change-row">
+        <span>Espèces reçues :</span>
+        <span>${sale.amountReceived.toLocaleString('fr-FR')} ${settings.currency}</span>
+      </div>
+      <div class="change-row">
+        <span>Monnaie rendue :</span>
+        <span>${sale.changeGiven.toLocaleString('fr-FR')} ${settings.currency}</span>
+      </div>
+      ` : ''}
+    </div>
+
+    <div class="barcode">
+      <div class="barcode-bars">
+        ${Array.from({ length: 32 }).map(
+          (_, i) => `<span class="bar" style="width:${i % 3 === 0 ? 3 : i % 2 === 0 ? 1.5 : 2}px;"></span>`
+        ).join('')}
+      </div>
+      <span>*${sale.receiptNumber}*</span>
+    </div>
+
+    <div class="footer">
+      ${settings.receiptFooter}
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    const printWindow = window.open('', '_blank', 'width=300,height=700');
+    if (!printWindow) return;
+
+    printWindow.document.write(receiptHtml);
+    printWindow.document.close();
   };
 
   const handleShare = async () => {

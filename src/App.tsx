@@ -341,6 +341,9 @@ export default function App() {
         isDark={isDark}
         cartItemCount={cartItemCount}
         cartTotal={cartTotal}
+        isFullscreen={isFullscreen}
+        isFullscreenSupported={isFullscreenSupported}
+        onToggleFullscreen={toggleFullscreen}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onToggleTheme={handleToggleTheme}
         onOpenCartMobile={() => setIsCartMobileOpen(true)}
@@ -535,6 +538,8 @@ export default function App() {
         isOpen={isSettingsOpen || activeTab === 'parametres'}
         settings={settings}
         syncStats={syncStats}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={toggleFullscreen}
         onClose={() => {
           setIsSettingsOpen(false);
           if (activeTab === 'parametres') setActiveTab('vente');

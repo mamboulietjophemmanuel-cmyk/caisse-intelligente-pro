@@ -33,6 +33,30 @@
   </head>
   <body class="min-h-screen antialiased bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors">
     <div id="root"></div>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('caisse_pro_settings_v2');
+          var themeMode = 'system';
+          if (stored) {
+            var settings = JSON.parse(stored);
+            if (settings && settings.themeMode) themeMode = settings.themeMode;
+          }
+          var isDark = false;
+          if (themeMode === 'dark') {
+            isDark = true;
+          } else if (themeMode === 'system') {
+            isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          }
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.body.classList.add('dark');
+          }
+        } catch (e) {
+          // Ignore les erreurs de lecture du stockage
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
